@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pac-Man</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+        }
+        canvas {
+            border: 1px solid #fff;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+        .button {
+            background-color: #444;
+            border: 1px solid #fff;
+            color: #fff;
+            padding: 10px;
+            margin: 5px;
+            font-size: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div id="controls">
+        <div id="up" class="button">↑</div>
+        <div id="left" class="button">←</div>
+        <div id="down" class="button">↓</div>
+        <div id="right" class="button">→</div>
+    </div>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const pacManSize = 30;
+        const speed = 5;
+        let pacMan = { x: canvas.width / 2, y: canvas.height / 2, dx: 0, dy: 0 };
+
+        function drawPacMan() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.arc(pacMan.x, pacMan.y, pacManSize, 0.2 * Math.PI, 1.8 * Math.PI);
+            ctx.lineTo(pacMan.x, pacMan.y);
+            ctx.fillStyle = 'yellow';
+            ctx.fill();
+        }
+
+        function update() {
+            pacMan.x += pacMan.dx;
+            pacMan.y += pacMan.dy;
+
+            if (pacMan.x < pacManSize) pacMan.x = pacManSize;
+            if (pacMan.x > canvas.width - pacManSize) pacMan.x = canvas.width - pacManSize;
+            if (pacMan.y < pacManSize) pacMan.y = pacManSize;
+            if (pacMan.y > canvas.height - pacManSize) pacMan.y = canvas.height - pacManSize;
+
+            drawPacMan();
+        }
+
+        function handleKeyPress(e) {
+            switch (e.key) {
+                case 'ArrowUp':
+                    pacMan.dy = -speed;
+                    pacMan.dx = 0;
+                    break;
+                case 'ArrowDown':
+                    pacMan.dy = speed;
+                    pacMan.dx = 0;
+                    break;
+                case 'ArrowLeft':
+                    pacMan.dx = -speed;
+                    pacMan.dy = 0;
+                    break;
+                case 'ArrowRight':
+                    pacMan.dx = speed;
+                    pacMan.dy = 0;
+                    break;
+            }
+        }
+
+        function handleTouchControl(e) {
+            const touch = e.target.id;
+            switch (touch) {
+                case 'up':
+                    pacMan.dy = -speed;
+                    pacMan.dx = 0;
+                    break;
+                case 'down':
+                    pacMan.dy = speed;
+                    pacMan.dx = 0;
+                    break;
+                case 'left':
+                    pacMan.dx = -speed;
+                    pacMan.dy = 0;
+                    break;
+                case 'right':
+                    pacMan.dx = speed;
+                    pacMan.dy = 0;
+                    break;
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyPress);
+        document.getElementById('controls').addEventListener('click', (e) => {
+            handleTouchControl(e.target);
+        });
+
+        setInterval(update, 1000 / 30); // Update at 30 FPS
+    </script>
+</body>
+</html
